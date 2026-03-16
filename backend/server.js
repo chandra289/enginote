@@ -3,14 +3,12 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const leaderboardRoutes = require("./routes/leaderboard");
 const aiRoutes = require("./routes/aiRoutes");
 const subjectRoutes = require("./routes/subjectRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-
-
-
 
 const app = express();
 
@@ -37,6 +35,14 @@ app.use("/api/ai", aiRoutes);
 /* SERVE UPLOADED FILES */
 
 app.use("/uploads", express.static("uploads"));
+
+/* SERVE REACT BUILD */
+
+app.use(express.static(path.join(__dirname, "build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "build", "index.html"));
+});
 
 const PORT = process.env.PORT || 5000;
 
