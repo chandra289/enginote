@@ -6,6 +6,8 @@ const jwt = require("jsonwebtoken");
 // SIGNUP
 exports.signup = async (req, res) => {
   try {
+    console.log("Signup Body:", req.body); // 👈 ADD THIS
+
     const { name, email, password, department } = req.body;
 
     if (!name || !email || !password) {
@@ -28,7 +30,7 @@ exports.signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      department   // ✅ added
+      department // 👈 ADD THIS
     });
 
     await user.save();
@@ -38,8 +40,8 @@ exports.signup = async (req, res) => {
     });
 
   } catch (err) {
-    console.log("Signup Error:", err); // ✅ important
-    res.status(500).json({ message: err.message }); // ✅ show real error
+    console.log("Signup Error:", err); // 👈 ADD THIS
+    res.status(500).json({ message: err.message }); // 👈 CHANGE THIS
   }
 };
 
