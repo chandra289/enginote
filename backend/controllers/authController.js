@@ -5,10 +5,14 @@ const jwt = require("jsonwebtoken");
 
 // SIGNUP
 exports.signup = async (req, res) => {
-
   try {
+    const { name, email, password, department } = req.body;
 
-    const { name, email, password } = req.body;
+    if (!name || !email || !password) {
+      return res.status(400).json({
+        message: "All fields are required"
+      });
+    }
 
     const existingUser = await User.findOne({ email });
 
@@ -24,7 +28,7 @@ exports.signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      
+      department   // ✅ added
     });
 
     await user.save();
@@ -34,12 +38,9 @@ exports.signup = async (req, res) => {
     });
 
   } catch (err) {
-
-    console.log(err);
-    res.status(500).json({ message: "Signup failed" });
-
+    console.log("Signup Error:", err); // ✅ important
+    res.status(500).json({ message: err.message }); // ✅ show real error
   }
-
 };
 
 
