@@ -272,14 +272,14 @@ export default function Semester() {
                 <div className="flex gap-3 mt-4">
 
                   <button
-                    onClick={()=>setPreviewUrl(`http://localhost:5000/${note.pdfUrl}`)}
+                    onClick={()=>setPreviewUrl(`http://enginote-production.up.railway.app/${note.pdfUrl}`)}
                     className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
                   >
                     Preview
                   </button>
 
                   <a
-                    href={`http://localhost:5000/${note.pdfUrl}`}
+                    href={`http://enginote-production.up.railway.app/${note.pdfUrl}`}
                     download
                     className="flex-1 text-center bg-gradient-to-r from-cyan-400 to-purple-500 py-2 rounded-lg text-black font-semibold"
                   >

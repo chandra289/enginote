@@ -9,7 +9,7 @@ export default function Signup() {
 
   const handleSignup = async () => {
     try {
-      await axios.post("http://localhost:5000/api/auth/signup", form);
+      await axios.post("http://enginote-production.up.railway.app/api/auth/signup", form);
       alert("Signup successful!");
       navigate("/dashboard");
     } catch (err) {

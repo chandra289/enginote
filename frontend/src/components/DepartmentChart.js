@@ -13,7 +13,7 @@ export default function DepartmentChart() {
       try {
 
         const res = await axios.get(
-          "http://localhost:5000/api/notes/stats/departments"
+          "http://enginote-production.up.railway.app/api/notes/stats/departments"
         );
 
         const formatted = res.data.map(item => ({

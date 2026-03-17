@@ -16,7 +16,7 @@ export default function Subjects() {
       try {
 
         const res = await axios.get(
-          `http://localhost:5000/api/subjects/${name}/${sem}`
+          `http://enginote-production.up.railway.app/api/subjects/${name}/${sem}`
         );
 
         setSubjects(res.data);

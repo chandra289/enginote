@@ -23,7 +23,7 @@ export default function AdminDashboard() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/admin/users/count"
+        "http://enginote-production.up.railway.app/api/admin/users/count"
       );
 
       setUsers(res.data.count);
@@ -44,7 +44,7 @@ export default function AdminDashboard() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/admin/notes/count"
+        "http://enginote-production.up.railway.app/api/admin/notes/count"
       );
 
       setTotalNotes(res.data.count);
@@ -65,7 +65,7 @@ export default function AdminDashboard() {
     try {
 
       const res = await axios.get(
-        "http://localhost:5000/api/admin/notes"
+        "http://enginote-production.up.railway.app/api/admin/notes"
       );
 
       setNotes(res.data);
@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/admin/notes/${id}`
+        `http://enginote-production.up.railway.app/api/admin/notes/${id}`
       );
 
       fetchNotes();

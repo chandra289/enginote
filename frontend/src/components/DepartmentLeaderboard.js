@@ -22,7 +22,7 @@ export default function DepartmentLeaderboard({ department }) {
     try {
 
       const res = await axios.get(
-        `http://localhost:5000/api/leaderboard/department/${department}`
+        `http://enginote-production.up.railway.app/api/leaderboard/department/${department}`
       );
 
       const formatted = res.data.map((user, index) => ({
