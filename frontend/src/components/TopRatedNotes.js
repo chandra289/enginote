@@ -14,7 +14,7 @@ export default function TopRatedNotes() {
     try {
 
       const res = await axios.get(
-        "http://enginote-production.up.railway.app/api/notes/top-rated"
+        "https://enginote-production.up.railway.app/api/notes/top-rated"
       );
 
       setNotes(res.data);
