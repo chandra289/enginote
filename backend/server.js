@@ -12,18 +12,38 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
+/* ================= CORS CONFIG ================= */
+
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://enginote-ht9d.vercel.app"
+];
+
+app.use(
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("CORS not allowed"));
+      }
+    },
+    credentials: true,
+  })
+);
+
+/* ================= MIDDLEWARE ================= */
+
 app.use(express.json());
-app.use(cors());
 
-mongoose.connect(process.env.MONGO_URI)
-.then(() => {
-  console.log("MongoDB Connected");
-})
-.catch((err) => {
-  console.error("MongoDB Connection Error:", err);
-});
+/* ================= DATABASE ================= */
 
-/* ROUTES */
+mongoose
+  .connect(process.env.MONGO_URI)
+  .then(() => console.log("MongoDB Connected"))
+  .catch((err) => console.error("MongoDB Connection Error:", err));
+
+/* ================= ROUTES ================= */
 
 app.use("/api/auth", require("./routes/authRoutes"));
 app.use("/api/notes", require("./routes/noteRoutes"));
@@ -32,17 +52,25 @@ app.use("/api/leaderboard", leaderboardRoutes);
 app.use("/api/subjects", subjectRoutes);
 app.use("/api/ai", aiRoutes);
 
-/* SERVE UPLOADED FILES */
+/* ================= STATIC FILES ================= */
 
 app.use("/uploads", express.static("uploads"));
 
-/* SERVE REACT BUILD */
+/* ================= HEALTH CHECK (IMPORTANT) ================= */
+
+app.get("/api/health", (req, res) => {
+  res.json({ status: "OK" });
+});
+
+/* ================= SERVE FRONTEND ================= */
 
 app.use(express.static(path.join(__dirname, "build")));
 
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "build", "index.html"));
 });
+
+/* ================= START SERVER ================= */
 
 const PORT = process.env.PORT || 5000;
 
