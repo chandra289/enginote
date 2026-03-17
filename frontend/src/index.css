@@ -152,7 +152,26 @@ body.dark {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
+/* Wheel rotation */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
 
+.animate-wheel {
+  animation: spin 20s linear infinite;
+}
+
+/* 🔥 Keep text straight */
+@keyframes spin-reverse {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(-360deg); }
+}
+
+.rotate-fix {
+  display: inline-block;
+  animation: spin-reverse 20s linear infinite;
+}
 .animate-wheel {
   animation: spin 20s linear infinite;
 }

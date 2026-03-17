@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DepartmentLeaderboard from "../components/DepartmentLeaderboard";
 import DepartmentTopRated from "../components/DepartmentTopRated";
-import "../src/index.css";
+import "../frontend/src/index.css";
 
 
 export default function Department() {
