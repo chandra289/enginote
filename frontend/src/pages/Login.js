@@ -17,7 +17,7 @@ export default function Login() {
     try {
 
       const res = await axios.post(
-        "http://enginote-production.up.railway.app/api/auth/login",
+        "https://enginote-production.up.railway.app/api/auth/login",
         form
       );
 
