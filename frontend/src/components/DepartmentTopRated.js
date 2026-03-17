@@ -16,7 +16,7 @@ export default function DepartmentTopRated({ department }) {
     try {
 
       const res = await axios.get(
-        `http://enginote-production.up.railway.app/api/notes/top-rated/${department}`
+        `https://enginote-production.up.railway.app/api/notes/top-rated/${department}`
       );
 
       setNotes(res.data);

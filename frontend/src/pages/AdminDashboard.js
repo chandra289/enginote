@@ -86,7 +86,7 @@ export default function AdminDashboard() {
     try {
 
       await axios.delete(
-        `http://enginote-production.up.railway.app/api/admin/notes/${id}`
+        `https://enginote-production.up.railway.app/api/admin/notes/${id}`
       );
 
       fetchNotes();

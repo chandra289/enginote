@@ -22,7 +22,7 @@ export default function Leaderboard() {
     try {
 
       const res = await axios.get(
-        "http://enginote-production.up.railway.app/api/leaderboard/top-contributors"
+        "https://enginote-production.up.railway.app/api/leaderboard/top-contributors"
       );
 
       const formatted = res.data.map((user, index) => ({

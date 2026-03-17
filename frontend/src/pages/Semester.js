@@ -24,7 +24,7 @@ export default function Semester() {
     try {
 
       const res = await axios.get(
-        `http://localhost:5000/api/notes/${name}/${sem}/${subject}/${unit}`
+        `http://enginote-production.up.railway.app/api/notes/${name}/${sem}/${subject}/${unit}`
       );
 
       setNotes(res.data);
@@ -55,7 +55,7 @@ export default function Semester() {
       const user = localStorage.getItem("user");
 
       await axios.post(
-        `http://localhost:5000/api/notes/rate/${noteId}`,
+        `http://enginote-production.up.railway.app/api/notes/rate/${noteId}`,
         { rating, user }
       );
 
@@ -99,7 +99,7 @@ export default function Semester() {
     try {
 
       await axios.post(
-        "http://localhost:5000/api/notes/upload",
+        "http://enginote-production.up.railway.app/api/notes/upload",
         formData,
         {
           headers: {
@@ -133,7 +133,7 @@ export default function Semester() {
     try {
 
       await axios.delete(
-        `http://localhost:5000/api/notes/delete/${noteId}`,
+        `https://enginote-production.up.railway.app/api/notes/delete/${noteId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`
@@ -272,14 +272,14 @@ export default function Semester() {
                 <div className="flex gap-3 mt-4">
 
                   <button
-                    onClick={()=>setPreviewUrl(`http://enginote-production.up.railway.app/${note.pdfUrl}`)}
+                    onClick={()=>setPreviewUrl(`https://enginote-production.up.railway.app/${note.pdfUrl}`)}
                     className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
                   >
                     Preview
                   </button>
 
                   <a
-                    href={`http://enginote-production.up.railway.app/${note.pdfUrl}`}
+                    href={`https://enginote-production.up.railway.app/${note.pdfUrl}`}
                     download
                     className="flex-1 text-center bg-gradient-to-r from-cyan-400 to-purple-500 py-2 rounded-lg text-black font-semibold"
                   >
