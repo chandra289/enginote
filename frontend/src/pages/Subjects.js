@@ -12,21 +12,18 @@ export default function Subjects() {
   useEffect(() => {
 
     const fetchSubjects = async () => {
-
       try {
-
         const res = await axios.get(
           `https://enginote-production.up.railway.app/api/subjects/${name}/${sem}`
         );
 
+        console.log("API DATA:", res.data); // 🔥 debug
+
         setSubjects(res.data);
 
       } catch (err) {
-
-        console.log(err);
-
+        console.log("ERROR:", err);
       }
-
     };
 
     fetchSubjects();
@@ -34,41 +31,45 @@ export default function Subjects() {
   }, [name, sem]);
 
   return (
-
     <div className="min-h-screen p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
 
-      <h1 className="text-3xl font-bold text-white mb-10 text-center">
+      <h1 className="text-3xl font-bold mb-10 text-center">
         {name} - Semester {sem} Subjects
       </h1>
 
-      <div className="grid md:grid-cols-3 gap-6">
+      {/* 🔥 EMPTY STATE FIX */}
+      {subjects.length === 0 ? (
+        <p className="text-center text-gray-400">
+          No subjects found
+        </p>
+      ) : (
+        <div className="grid md:grid-cols-3 gap-6">
 
-        {subjects.map(sub => (
+          {subjects.map(sub => (
 
-          <div
-            key={sub._id}
-            onClick={() =>
-              navigate(`/department/${name}/semester/${sem}/subject/${sub.subjectName}`)
-            }
-            className="cursor-pointer bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-xl hover:scale-105 transition"
-          >
+            <div
+              key={sub._id}
+              onClick={() =>
+                navigate(`/department/${name}/semester/${sem}/subject/${sub.subjectName}`)
+              }
+              className="cursor-pointer bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-xl hover:scale-105 transition"
+            >
 
-            <h3 className="text-xl text-white font-semibold">
-              {sub.subjectName}
-            </h3>
+              <h3 className="text-xl font-semibold">
+                {sub.subjectName}
+              </h3>
 
-            <p className="text-gray-400">
-              {sub.subjectCode}
-            </p>
+              <p className="text-gray-400">
+                {sub.subjectCode}
+              </p>
 
-          </div>
+            </div>
 
-        ))}
+          ))}
 
-      </div>
+        </div>
+      )}
 
     </div>
-
   );
-
 }

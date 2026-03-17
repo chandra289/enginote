@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Subject = require("./models/Subject");
 
-mongoose.connect(process.env.MONGO_URI);
+mongoose.connect(process.env.MONGO_URI);;
 
 const departments = [
 "CSE",
@@ -186,7 +186,7 @@ subjectName:sub
 
 await Subject.insertMany(dataset);
 
-console.log("🔥 FULL SUPER DATASET GENERATED");
+console.log(" FULL SUPER DATASET GENERATED");
 console.log("Subjects inserted:",dataset.length);
 
 process.exit();
