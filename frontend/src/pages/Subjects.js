@@ -14,8 +14,10 @@ export default function Subjects() {
     const fetchSubjects = async () => {
       try {
         const res = await axios.get(
-          `https://enginote-production.up.railway.app/api/subjects/${name}/${sem}`
-        );
+          
+  `https://enginote-production.up.railway.app/api/subjects/${name.toUpperCase()}/${sem}`
+);
+        
 
         console.log("API DATA:", res.data); // 🔥 debug
 
