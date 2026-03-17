@@ -1,4 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 import DepartmentLeaderboard from "../components/DepartmentLeaderboard";
 import DepartmentTopRated from "../components/DepartmentTopRated";
 import AiAssistant from "../components/AiAssistant";
@@ -8,33 +9,35 @@ export default function Department() {
   const { name } = useParams();
   const navigate = useNavigate();
 
+  const [isMobile, setIsMobile] = useState(false);
+
+  useEffect(() => {
+    const checkScreen = () => setIsMobile(window.innerWidth < 640);
+    checkScreen();
+    window.addEventListener("resize", checkScreen);
+    return () => window.removeEventListener("resize", checkScreen);
+  }, []);
+
   const semesters = [
-    "SEM 1",
-    "SEM 2",
-    "SEM 3",
-    "SEM 4",
-    "SEM 5",
-    "SEM 6",
-    "SEM 7",
-    "SEM 8"
+    "SEM 1","SEM 2","SEM 3","SEM 4",
+    "SEM 5","SEM 6","SEM 7","SEM 8"
   ];
 
-  const radius = 180;
+  // 🎯 Dynamic radius
+  const radius = isMobile ? 110 : 180;
 
   return (
 
-    <div className="min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
-        
-      {/* PAGE TITLE */}
+    <div className="min-h-screen flex flex-col items-center justify-center px-4 
+    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
 
-      <h1 className="text-4xl font-bold mb-16 text-center">
+      {/* TITLE */}
+      <h1 className="text-2xl sm:text-4xl font-bold mb-10 sm:mb-16 text-center">
         {name} Department
       </h1>
 
-
-      {/* SEMESTER WHEEL */}
-
-      <div className="relative w-[450px] h-[450px]">
+      {/* WHEEL */}
+      <div className="relative w-[280px] h-[280px] sm:w-[450px] sm:h-[450px]">
 
         <div className="absolute w-full h-full animate-wheel">
 
@@ -59,18 +62,17 @@ export default function Department() {
                   top: `calc(50% + ${y}px)`,
                   transform: "translate(-50%, -50%)"
                 }}
-                className="w-20 h-20 rounded-full 
+                className="
+                w-12 h-12 sm:w-20 sm:h-20
+                text-xs sm:text-base
+                rounded-full 
                 bg-white/10 backdrop-blur-lg 
                 border border-white/20 
                 flex items-center justify-center 
                 hover:scale-110 hover:bg-cyan-400 hover:text-black
                 transition duration-300"
               >
-
-                <span className="animate-counter font-semibold">
-                  {sem}
-                </span>
-
+                {sem}
               </button>
 
             );
@@ -79,43 +81,39 @@ export default function Department() {
 
         </div>
 
-
-        {/* CENTER DEPARTMENT BADGE */}
-
+        {/* CENTER */}
         <div
-          className="absolute top-1/2 left-1/2
-          w-28 h-28
+          className="
+          absolute top-1/2 left-1/2
+          w-16 h-16 sm:w-28 sm:h-28
           -translate-x-1/2 -translate-y-1/2
           bg-gradient-to-r from-cyan-400 to-purple-500
           rounded-full
           flex items-center justify-center
-          text-center text-sm font-bold
+          text-[10px] sm:text-sm font-bold
           text-black
-          shadow-[0_0_40px_#00ffff]
+          shadow-[0_0_20px_#00ffff] sm:shadow-[0_0_40px_#00ffff]
           leading-tight px-2"
         >
-
           {name}
-
         </div>
 
       </div>
 
-
-      {/* LEADERBOARD + TOP RATED */}
-
-      <div className="mt-24 w-full max-w-4xl space-y-10">
+      {/* SECTIONS */}
+      <div className="mt-14 sm:mt-24 w-full max-w-4xl space-y-8 sm:space-y-10">
 
         <DepartmentLeaderboard department={name} />
-
         <DepartmentTopRated department={name} />
 
-        
+      </div>
 
+      {/* OPTIONAL AI BUTTON (floating for mobile) */}
+      <div className="fixed bottom-5 right-5 sm:bottom-10 sm:right-10">
+        
       </div>
 
     </div>
 
   );
-
 }
