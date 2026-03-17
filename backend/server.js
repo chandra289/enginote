@@ -16,7 +16,7 @@ const app = express();
 
 const allowedOrigins = [
   "http://localhost:3000",
-  "https://enginote-ht9d.vercel.app"
+  "https://enginote-jjm8.vercel.app"
 ];
 
 app.use(
