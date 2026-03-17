@@ -23,31 +23,55 @@ export default function Department() {
     "SEM 5","SEM 6","SEM 7","SEM 8"
   ];
 
-  // 🎯 Dynamic radius
-  const radius = isMobile ? 110 : 180;
+  // 🎯 Adjusted radius for mobile
+  const radius = isMobile ? 90 : 180;
 
   return (
 
-    <div className="min-h-screen flex flex-col items-center justify-center px-4 
-    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
+    <div className="min-h-screen flex flex-col items-center justify-start pt-10 px-4 
+    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white overflow-hidden">
 
       {/* TITLE */}
-      <h1 className="text-2xl sm:text-4xl font-bold mb-10 sm:mb-16 text-center">
+      <h1 className="text-2xl sm:text-4xl font-bold mb-6 sm:mb-12 text-center">
         {name} Department
       </h1>
 
-      {/* WHEEL */}
-      <div className="relative w-[280px] h-[280px] sm:w-[450px] sm:h-[450px]">
+      {/* 🔥 MOBILE QUICK ACCESS (SEM 1 & 2) */}
+      {isMobile && (
+        <div className="flex gap-4 mb-6">
+          <button
+            onClick={() => navigate(`/department/${name}/semester/1`)}
+            className="px-4 py-2 bg-cyan-400 text-black rounded-full font-semibold"
+          >
+            SEM 1
+          </button>
 
-        <div className="absolute w-full h-full animate-wheel">
+          <button
+            onClick={() => navigate(`/department/${name}/semester/2`)}
+            className="px-4 py-2 bg-cyan-400 text-black rounded-full font-semibold"
+          >
+            SEM 2
+          </button>
+        </div>
+      )}
+
+      {/* WHEEL */}
+      <div className="relative 
+      w-[260px] h-[260px] 
+      sm:w-[450px] sm:h-[450px] 
+      overflow-hidden">
+
+        <div className={`absolute w-full h-full ${!isMobile ? "animate-wheel" : ""}`}>
 
           {semesters.map((sem, index) => {
 
             const angle = (360 / semesters.length) * index;
             const rad = angle * (Math.PI / 180);
 
-            const x = radius * Math.cos(rad);
-            const y = radius * Math.sin(rad);
+            const safeRadius = isMobile ? radius * 0.8 : radius;
+
+            const x = safeRadius * Math.cos(rad);
+            const y = safeRadius * Math.sin(rad);
 
             return (
 
@@ -63,8 +87,8 @@ export default function Department() {
                   transform: "translate(-50%, -50%)"
                 }}
                 className="
-                w-12 h-12 sm:w-20 sm:h-20
-                text-xs sm:text-base
+                w-10 h-10 sm:w-20 sm:h-20
+                text-[10px] sm:text-base
                 rounded-full 
                 bg-white/10 backdrop-blur-lg 
                 border border-white/20 
@@ -81,7 +105,7 @@ export default function Department() {
 
         </div>
 
-        {/* CENTER */}
+        {/* CENTER BADGE */}
         <div
           className="
           absolute top-1/2 left-1/2
@@ -100,15 +124,15 @@ export default function Department() {
 
       </div>
 
-      {/* SECTIONS */}
-      <div className="mt-14 sm:mt-24 w-full max-w-4xl space-y-8 sm:space-y-10">
+      {/* LEADERBOARD + TOP RATED */}
+      <div className="mt-12 sm:mt-20 w-full max-w-4xl space-y-8 sm:space-y-10">
 
         <DepartmentLeaderboard department={name} />
         <DepartmentTopRated department={name} />
 
       </div>
 
-      {/* OPTIONAL AI BUTTON (floating for mobile) */}
+      {/* FLOATING AI BUTTON */}
       <div className="fixed bottom-5 right-5 sm:bottom-10 sm:right-10">
         
       </div>
@@ -116,4 +140,5 @@ export default function Department() {
     </div>
 
   );
+
 }
