@@ -1,7 +1,10 @@
 const mongoose = require("mongoose");
 const Subject = require("./models/Subject");
+require("dotenv").config();
 
-mongoose.connect(process.env.MONGO_URI);;
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => console.log("MongoDB Connected"))
+    .catch(err => console.log(err));
 
 const departments = [
 "CSE",
