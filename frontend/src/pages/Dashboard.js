@@ -32,7 +32,7 @@ export default function Dashboard() {
         try {
 
           const res = await axios.get(
-            `http://localhost:5000/api/notes/count/${encodeURIComponent(dep.name)}`
+            `https://enginote-production.up.railway.app/api/notes/count/${encodeURIComponent(dep.name)}`
           );
 
           counts[dep.name] = res.data.count;
