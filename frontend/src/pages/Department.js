@@ -2,7 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import DepartmentLeaderboard from "../components/DepartmentLeaderboard";
 import DepartmentTopRated from "../components/DepartmentTopRated";
-import AiAssistant from "../components/AiAssistant";
+import "./index.css";
 
 export default function Department() {
 
@@ -23,27 +23,26 @@ export default function Department() {
     "SEM 5","SEM 6","SEM 7","SEM 8"
   ];
 
-  // 🔥 Balanced radius (visible but not too far)
-  const radius = isMobile ? 120 : 180;
+  const radius = isMobile ? 100 : 180;
 
   return (
 
     <div className="min-h-screen flex flex-col items-center 
-    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
+    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white overflow-x-hidden">
 
       {/* TITLE */}
       <h1 className="text-2xl sm:text-4xl font-bold mt-10 mb-10 text-center">
         {name} Department
       </h1>
 
-      {/* 🔥 SCROLLABLE WRAPPER */}
-      <div className="w-full flex justify-center overflow-x-auto overflow-y-visible">
+      {/* WHEEL WRAPPER */}
+      <div className="w-full flex justify-center">
 
-        {/* WHEEL CONTAINER */}
+        {/* WHEEL */}
         <div className="relative 
-        w-[320px] h-[320px] 
-        sm:w-[450px] sm:h-[450px]
-        flex-shrink-0">
+        w-[300px] h-[300px] 
+        sm:w-[450px] sm:h-[450px] 
+        mx-auto">
 
           <div className="absolute w-full h-full animate-wheel">
 
@@ -76,9 +75,14 @@ export default function Department() {
                   border border-white/20 
                   flex items-center justify-center 
                   hover:scale-110 hover:bg-cyan-400 hover:text-black
-                  transition duration-300"
+                  transition duration-300 text-center"
                 >
-                  {sem}
+
+                  {/* 🔥 TEXT FIX */}
+                  <span className="rotate-fix font-semibold">
+                    {sem}
+                  </span>
+
                 </button>
 
               );
@@ -115,7 +119,7 @@ export default function Department() {
 
       </div>
 
-      {/* FLOATING AI */}
+      {/* FLOATING AI BUTTON */}
       
 
     </div>
