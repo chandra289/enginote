@@ -12,25 +12,22 @@ const adminRoutes = require("./routes/adminRoutes");
 
 const app = express();
 
-/* ================= CORS CONFIG ================= */
-
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://enginote-jjm8.vercel.app"
-];
+/* ================= CORS CONFIG (FIXED) ================= */
 
 app.use(
   cors({
-    origin: function (origin, callback) {
-      if (!origin || allowedOrigins.includes(origin)) {
-        callback(null, true);
-      } else {
-        callback(new Error("CORS not allowed"));
-      }
-    },
-    credentials: true,
+    origin: [
+      "http://localhost:3000",
+      "https://enginote-jjm8.vercel.app"
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
+    credentials: true
   })
 );
+
+// 👇 VERY IMPORTANT (handles preflight requests)
+app.options("*", cors());
 
 /* ================= MIDDLEWARE ================= */
 
@@ -56,7 +53,7 @@ app.use("/api/ai", aiRoutes);
 
 app.use("/uploads", express.static("uploads"));
 
-/* ================= HEALTH CHECK (IMPORTANT) ================= */
+/* ================= HEALTH CHECK ================= */
 
 app.get("/api/health", (req, res) => {
   res.json({ status: "OK" });
