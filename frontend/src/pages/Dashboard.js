@@ -30,13 +30,10 @@ export default function Dashboard() {
 
       for (let dep of departments) {
         try {
-
           const res = await axios.get(
             `https://enginote-production.up.railway.app/api/notes/count/${encodeURIComponent(dep.name)}`
           );
-
           counts[dep.name] = res.data.count;
-
         } catch {
           counts[dep.name] = 0;
         }
@@ -57,19 +54,20 @@ export default function Dashboard() {
       <Navbar />
 
       {/* PAGE CONTENT */}
-      <div className="min-h-screen pt-24  px-4 py-10 md:p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
+      <div className="min-h-screen pt-24 px-4 py-10 md:p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
 
-
-        {/* DASHBOARD TITLE */}
+        {/* 🔥 DASHBOARD TITLE */}
         <h1
           id="dashboard"
-          className="text-4xl font-bold text-center mb-12 bg-gradient-to-r from-cyan-400 to-purple-500 bg-clip-text text-transparent"
+          className="text-4xl font-bold text-center mb-12 
+          bg-gradient-to-r from-cyan-400 via-blue-400 to-purple-500 
+          bg-clip-text text-transparent 
+          drop-shadow-[0_0_15px_rgba(0,255,255,0.6)] tracking-wide"
         >
           ENGINOTE DASHBOARD
         </h1>
 
         {/* DEPARTMENT CARDS */}
-
         <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-8">
 
           {departments.map((dep, index) => (
@@ -93,17 +91,17 @@ export default function Dashboard() {
                 {/* ICON */}
                 <div className="text-4xl">{dep.icon}</div>
 
-                {/* DEPARTMENT NAME */}
+                {/* NAME */}
                 <h2 className="text-xl font-bold text-white">
                   {dep.name}
                 </h2>
 
                 {/* NOTES COUNT */}
-                <p className="text-cyan-400 font-semibold text-sm">
+                <p className="text-cyan-300 font-semibold text-sm">
                   {notesCount[dep.name] || 0} Notes
                 </p>
 
-                {/* ENTER BUTTON */}
+                {/* BUTTON */}
                 <Link
                   to={`/department/${encodeURIComponent(dep.name)}`}
                   className="mt-4 text-center border border-cyan-400 text-cyan-400 py-2 rounded-lg hover:bg-cyan-400 hover:text-black transition"
@@ -119,18 +117,28 @@ export default function Dashboard() {
 
         </div>
 
-
-        {/* TOP CONTRIBUTORS */}
-
+        {/* 🔥 TOP CONTRIBUTORS */}
         <div id="contributors" className="mt-24">
+
+          <h2 className="text-3xl font-bold text-center mb-8 
+          text-cyan-300 drop-shadow-[0_0_10px_#00ffff] tracking-wide">
+            TOP CONTRIBUTORS
+          </h2>
+
           <Leaderboard />
+
         </div>
 
-
-        {/* TOP RATED NOTES */}
-
+        {/* 🔥 TOP RATED NOTES */}
         <div id="topnotes" className="mt-20">
+
+          <h2 className="text-3xl font-bold text-center mb-8 
+          text-cyan-300 drop-shadow-[0_0_10px_#00ffff] tracking-wide">
+            TOP RATED NOTES
+          </h2>
+
           <TopRatedNotes />
+
         </div>
 
       </div>

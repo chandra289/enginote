@@ -42,7 +42,7 @@ export default function Subjects() {
       {/* 🔥 EMPTY STATE FIX */}
       {subjects.length === 0 ? (
         <p className="text-center text-gray-400">
-          No subjects found
+         
         </p>
       ) : (
         <div className="grid md:grid-cols-3 gap-6">
