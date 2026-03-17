@@ -333,20 +333,21 @@ router.get("/:department/:semester", async (req, res) => {
   try {
 
     const department = decodeURIComponent(req.params.department).toUpperCase();
+    const semester = Number(req.params.semester); // 🔥 important
 
-    const notes = await Note.find({
+    const subjects = await Subject.find({
       department,
-      semester: req.params.semester
-    });
+      semester
+    }).sort({ subjectName: 1 }); // optional sorting
 
-    res.json(notes);
+    res.json(subjects);
 
   } catch (err) {
 
-    console.log(err);
+    console.log("ERROR FETCHING SUBJECTS:", err);
 
     res.status(500).json({
-      message: "Error fetching notes"
+      message: "Error fetching subjects"
     });
 
   }
