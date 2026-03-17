@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 const Subject = require("./models/Subject");
 
-mongoose.connect("mongodb://127.0.0.1:27017/enginote");
+mongoose.connect(process.env.MONGO_URI);
 
 const departments = [
 "CSE",
