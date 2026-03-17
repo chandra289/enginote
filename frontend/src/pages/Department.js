@@ -23,119 +23,100 @@ export default function Department() {
     "SEM 5","SEM 6","SEM 7","SEM 8"
   ];
 
-  // 🎯 Adjusted radius for mobile
-  const radius = isMobile ? 90 : 180;
+  // 🔥 Balanced radius (visible but not too far)
+  const radius = isMobile ? 120 : 180;
 
   return (
 
-    <div className="min-h-screen flex flex-col items-center justify-start pt-10 px-4 
-    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white overflow-hidden">
+    <div className="min-h-screen flex flex-col items-center 
+    bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
 
       {/* TITLE */}
-      <h1 className="text-2xl sm:text-4xl font-bold mb-6 sm:mb-12 text-center">
+      <h1 className="text-2xl sm:text-4xl font-bold mt-10 mb-10 text-center">
         {name} Department
       </h1>
 
-      {/* 🔥 MOBILE QUICK ACCESS (SEM 1 & 2) */}
-      {isMobile && (
-        <div className="flex gap-4 mb-6">
-          <button
-            onClick={() => navigate(`/department/${name}/semester/1`)}
-            className="px-4 py-2 bg-cyan-400 text-black rounded-full font-semibold"
+      {/* 🔥 SCROLLABLE WRAPPER */}
+      <div className="w-full flex justify-center overflow-x-auto overflow-y-visible">
+
+        {/* WHEEL CONTAINER */}
+        <div className="relative 
+        w-[320px] h-[320px] 
+        sm:w-[450px] sm:h-[450px]
+        flex-shrink-0">
+
+          <div className="absolute w-full h-full animate-wheel">
+
+            {semesters.map((sem, index) => {
+
+              const angle = (360 / semesters.length) * index;
+              const rad = angle * (Math.PI / 180);
+
+              const x = radius * Math.cos(rad);
+              const y = radius * Math.sin(rad);
+
+              return (
+
+                <button
+                  key={sem}
+                  onClick={() =>
+                    navigate(`/department/${name}/semester/${index + 1}`)
+                  }
+                  style={{
+                    position: "absolute",
+                    left: `calc(50% + ${x}px)`,
+                    top: `calc(50% + ${y}px)`,
+                    transform: "translate(-50%, -50%)"
+                  }}
+                  className="
+                  w-12 h-12 sm:w-20 sm:h-20
+                  text-xs sm:text-base
+                  rounded-full 
+                  bg-white/10 backdrop-blur-lg 
+                  border border-white/20 
+                  flex items-center justify-center 
+                  hover:scale-110 hover:bg-cyan-400 hover:text-black
+                  transition duration-300"
+                >
+                  {sem}
+                </button>
+
+              );
+
+            })}
+
+          </div>
+
+          {/* CENTER BADGE */}
+          <div
+            className="
+            absolute top-1/2 left-1/2
+            w-20 h-20 sm:w-28 sm:h-28
+            -translate-x-1/2 -translate-y-1/2
+            bg-gradient-to-r from-cyan-400 to-purple-500
+            rounded-full
+            flex items-center justify-center
+            text-xs sm:text-sm font-bold
+            text-black
+            shadow-[0_0_25px_#00ffff] sm:shadow-[0_0_40px_#00ffff]"
           >
-            SEM 1
-          </button>
+            {name}
+          </div>
 
-          <button
-            onClick={() => navigate(`/department/${name}/semester/2`)}
-            className="px-4 py-2 bg-cyan-400 text-black rounded-full font-semibold"
-          >
-            SEM 2
-          </button>
-        </div>
-      )}
-
-      {/* WHEEL */}
-      <div className="relative 
-      w-[260px] h-[260px] 
-      sm:w-[450px] sm:h-[450px] 
-      overflow-hidden">
-
-        <div className={`absolute w-full h-full ${!isMobile ? "animate-wheel" : ""}`}>
-
-          {semesters.map((sem, index) => {
-
-            const angle = (360 / semesters.length) * index;
-            const rad = angle * (Math.PI / 180);
-
-            const safeRadius = isMobile ? radius * 0.8 : radius;
-
-            const x = safeRadius * Math.cos(rad);
-            const y = safeRadius * Math.sin(rad);
-
-            return (
-
-              <button
-                key={sem}
-                onClick={() =>
-                  navigate(`/department/${name}/semester/${index + 1}`)
-                }
-                style={{
-                  position: "absolute",
-                  left: `calc(50% + ${x}px)`,
-                  top: `calc(50% + ${y}px)`,
-                  transform: "translate(-50%, -50%)"
-                }}
-                className="
-                w-10 h-10 sm:w-20 sm:h-20
-                text-[10px] sm:text-base
-                rounded-full 
-                bg-white/10 backdrop-blur-lg 
-                border border-white/20 
-                flex items-center justify-center 
-                hover:scale-110 hover:bg-cyan-400 hover:text-black
-                transition duration-300"
-              >
-                {sem}
-              </button>
-
-            );
-
-          })}
-
-        </div>
-
-        {/* CENTER BADGE */}
-        <div
-          className="
-          absolute top-1/2 left-1/2
-          w-16 h-16 sm:w-28 sm:h-28
-          -translate-x-1/2 -translate-y-1/2
-          bg-gradient-to-r from-cyan-400 to-purple-500
-          rounded-full
-          flex items-center justify-center
-          text-[10px] sm:text-sm font-bold
-          text-black
-          shadow-[0_0_20px_#00ffff] sm:shadow-[0_0_40px_#00ffff]
-          leading-tight px-2"
-        >
-          {name}
         </div>
 
       </div>
 
-      {/* LEADERBOARD + TOP RATED */}
-      <div className="mt-12 sm:mt-20 w-full max-w-4xl space-y-8 sm:space-y-10">
+      {/* SECTIONS */}
+      <div className="mt-16 w-full max-w-4xl px-4 space-y-8">
 
         <DepartmentLeaderboard department={name} />
         <DepartmentTopRated department={name} />
 
       </div>
 
-      {/* FLOATING AI BUTTON */}
-      <div className="fixed bottom-5 right-5 sm:bottom-10 sm:right-10">
-        
-      </div>
+      {/* FLOATING AI */}
+      
 
     </div>
 
