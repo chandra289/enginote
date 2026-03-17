@@ -129,7 +129,7 @@ export default function Dashboard() {
 
         {/* TOP RATED NOTES */}
 
-        <div id="topnotes" className="mt-20">
+        <div id="topnotes" className="mt-20 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800">
           <TopRatedNotes />
         </div>
 
