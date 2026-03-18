@@ -3,7 +3,8 @@ const bcrypt = require("bcrypt");
 const User = require("./models/User");
 
 // connect to database
-mongoose.connect("mongodb://127.0.0.1:27017/enginote");
+require("dotenv").config();
+mongoose.connect(process.env.MONGO_URI);
 
 async function createAdmin(){
 
