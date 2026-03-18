@@ -16,77 +16,37 @@ router.post("/upload", auth, upload.array("files", 10), async (req, res) => {
 
     const files = req.files;
 
+    if (!files || files.length === 0) {
+      return res.status(400).json({ message: "No files uploaded" });
+    }
+
     const savedNotes = [];
 
     for (const file of files) {
 
-      let summaryText = "AI disabled";
-      let flashcardText = "AI disabled";
-
-      try {
-
-        /* ===============================
-           Call AI Summary API
-        ============================== */
-
-        const summary = await axios.post(
-          "http://localhost:8000/summarize",
-          { file_path: file.path }
-        );
-
-        summaryText = summary.data.summary;
-
-        /* ===============================
-           Call AI Flashcard API
-        ============================== */
-
-        const flashcards = await axios.post(
-          "http://localhost:8000/flashcards",
-          { file_path: file.path }
-        );
-
-        flashcardText = flashcards.data.flashcards;
-
-      } catch (aiError) {
-
-        console.log("AI processing failed:", aiError.message);
-
-        summaryText = "AI summary unavailable";
-        flashcardText = "AI flashcards unavailable";
-      }
-
-      /* ===============================
-         Save Note to Database
-      ============================== */
-
       const note = new Note({
-
         title: file.originalname,
         department: req.body.department.toUpperCase(),
         semester: req.body.semester,
         subject: req.body.subject,
+        unit: req.body.unit,
         uploadedBy: req.user.name,
-        pdfUrl: file.path,
-
-        summary: summaryText,
-        flashcards: flashcardText
-
+        pdfUrl: file.path
       });
 
       await note.save();
 
       savedNotes.push(note);
-
     }
 
     res.json({
-      message: "Files uploaded successfully with AI summary and flashcards",
+      message: "Files uploaded successfully",
       notes: savedNotes
     });
 
   } catch (err) {
 
-    console.log(err);
+    console.log("UPLOAD ERROR:", err);
 
     res.status(500).json({
       message: "Upload failed"
@@ -95,7 +55,6 @@ router.post("/upload", auth, upload.array("files", 10), async (req, res) => {
   }
 
 });
-
 
 /* ===============================
    2️⃣ Department Contribution Chart
