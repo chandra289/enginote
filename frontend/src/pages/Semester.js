@@ -122,7 +122,10 @@ export default function Semester() {
       fetchNotes();
 
     } catch {
-      alert("Upload failed");
+       
+  console.log("UPLOAD ERROR:", err.response?.data || err.message);
+  alert("Upload failed");
+
     }
   };
 
