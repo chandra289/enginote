@@ -112,7 +112,7 @@ export default function Department() {
       </div>
 
       {/* SECTIONS */}
-      <div className="mt-16 w-full max-w-4xl px-4 space-y-8">
+      <div className="mt-16 w-full max-w-4xl px-3 sm:px-4 space-y-8">
 
         <DepartmentLeaderboard department={name} />
         <DepartmentTopRated department={name} />

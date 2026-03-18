@@ -39,12 +39,7 @@ export default function Subjects() {
         {name} - Semester {sem} Subjects
       </h1>
 
-      {/* 🔥 EMPTY STATE FIX */}
-      {subjects.length === 0 ? (
-        <p className="text-center text-gray-400">
-         
-        </p>
-      ) : (
+      
         <div className="grid md:grid-cols-3 gap-6">
 
           {subjects.map(sub => (
@@ -70,7 +65,7 @@ export default function Subjects() {
           ))}
 
         </div>
-      )}
+      
 
     </div>
   );
