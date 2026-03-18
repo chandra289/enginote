@@ -104,7 +104,7 @@ export default function Semester() {
     try {
 
       await axios.post(
-        "https://enginote-production.up.railway.app/api/notes/upload",
+        "https://enginote-production.up.railway.app/api/notes/uploads",
         formData,
         {
           headers: {
