@@ -104,7 +104,7 @@ export default function Semester() {
     try {
 
       await axios.post(
-        "https://enginote-production.up.railway.app/api/notes/uploads",
+        "https://enginote-production.up.railway.app/api/notes/upload",
         formData,
         {
           headers: {
@@ -121,11 +121,12 @@ export default function Semester() {
 
       fetchNotes();
 
-    } catch {
+    } catch(err)
+    {
        
   console.log("UPLOAD ERROR:", err.response?.data || err.message);
   alert("Upload failed");
-
+}
     }
   };
 
@@ -319,4 +320,3 @@ export default function Semester() {
     </div>
 
   );
-}
