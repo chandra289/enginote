@@ -121,14 +121,11 @@ export default function Semester() {
 
       fetchNotes();
 
-    } catch(err)
-    {
-       
+    } catch (err) {
   console.log("UPLOAD ERROR:", err.response?.data || err.message);
   alert("Upload failed");
 }
-    }
-  };
+};
 
   /* DELETE NOTE */
   const deleteNote = async (noteId) => {
@@ -320,3 +317,4 @@ export default function Semester() {
     </div>
 
   );
+}
