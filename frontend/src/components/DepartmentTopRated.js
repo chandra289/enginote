@@ -36,7 +36,7 @@ export default function DepartmentTopRated({ department }) {
     border border-white/20 
     shadow-2xl">
 
-      <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-center leading-tight px-2 text-cyan-300">
+      <h1 className="text-xl sm:text-3xl md:text-4xl font-bold text-center leading-tight px-2 text-white">
   {department} TOP
   <br />
   RATED NOTES

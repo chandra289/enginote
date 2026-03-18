@@ -12,67 +12,72 @@ export default function Semester() {
 
   const token = localStorage.getItem("token");
 
-  const [uploaderName, setUploaderName] = useState(
-    localStorage.getItem("user") || ""
-  );
-
+  // ✅ Handle user name (JSON + string safe)
+  const [uploaderName, setUploaderName] = useState(() => {
+    const user = localStorage.getItem("user");
+    try {
+      const parsed = JSON.parse(user);
+      return parsed?.name || "";
+    } catch {
+      return user || "";
+    }
+  });
 
   /* FETCH NOTES */
-
   const fetchNotes = async () => {
-
     try {
-
       const res = await axios.get(
-        `http://enginote-production.up.railway.app/api/notes/${name}/${sem}/${subject}/${unit}`
+        `https://enginote-production.up.railway.app/api/notes/${name}/${sem}/${subject}/${unit}`
       );
-
       setNotes(res.data);
-
     } catch (err) {
-
       console.log(err);
-
     }
-
   };
-
 
   useEffect(() => {
-
     fetchNotes();
-
   }, [name, sem, subject, unit]);
 
-
-
-  /* RATE NOTE */
-
+  /* 🔥 REAL-TIME RATING (OPTIMISTIC UI) */
   const rateNote = async (noteId, rating) => {
 
+    const user = uploaderName;
+
+    // ⚡ instant UI update
+    setNotes(prevNotes =>
+      prevNotes.map(note => {
+
+        if (note._id !== noteId) return note;
+
+        const updatedRatings = note.ratings ? [...note.ratings] : [];
+
+        const existing = updatedRatings.find(r => r.user === user);
+
+        if (existing) {
+          existing.value = rating;
+        } else {
+          updatedRatings.push({ user, value: rating });
+        }
+
+        return { ...note, ratings: updatedRatings };
+      })
+    );
+
     try {
-
-      const user = localStorage.getItem("user");
-
       await axios.post(
-        `http://enginote-production.up.railway.app/api/notes/rate/${noteId}`,
+        `https://enginote-production.up.railway.app/api/notes/rate/${noteId}`,
         { rating, user }
       );
-
-      fetchNotes();
-
     } catch (err) {
-
       console.log(err);
 
+      // rollback if error
+      fetchNotes();
     }
-
   };
 
-
-
   /* UPLOAD NOTE */
-
   const handleUpload = async () => {
 
     if (!uploaderName) {
@@ -99,7 +104,7 @@ export default function Semester() {
     try {
 
       await axios.post(
-        "http://enginote-production.up.railway.app/api/notes/upload",
+        "https://enginote-production.up.railway.app/api/notes/upload",
         formData,
         {
           headers: {
@@ -117,21 +122,13 @@ export default function Semester() {
       fetchNotes();
 
     } catch {
-
       alert("Upload failed");
-
     }
-
   };
 
-
-
   /* DELETE NOTE */
-
   const deleteNote = async (noteId) => {
-
     try {
-
       await axios.delete(
         `https://enginote-production.up.railway.app/api/notes/delete/${noteId}`,
         {
@@ -142,186 +139,161 @@ export default function Semester() {
       );
 
       alert("Note deleted");
-
       fetchNotes();
 
     } catch (err) {
-
       console.log(err);
-
     }
-
   };
-
-
 
   return (
 
-<div className="min-h-screen p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
+    <div className="min-h-screen px-4 py-6 sm:p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
 
-      <div className="relative z-10 ">
+      {/* HEADER */}
+      <h1 className="text-xl sm:text-3xl font-bold mb-3 text-center break-words px-2">
+        {name} - Semester {sem}
+      </h1>
 
-        <h1 className="text-3xl font-bold mb-3 text-center">
-          {name} - Semester {sem}
-        </h1>
+      <h2 className="text-lg sm:text-2xl text-cyan-400 font-semibold mb-8 text-center break-words px-2">
+        {subject} - Unit {unit}
+      </h2>
 
-        <h2 className="text-2xl text-cyan-400 font-semibold mb-10 text-center">
-          {subject} - Unit {unit}
+      {/* UPLOAD */}
+      <div className="bg-white/10 backdrop-blur-lg border border-white/20 
+      p-4 sm:p-6 rounded-2xl mb-10 max-w-xl mx-auto">
+
+        <h2 className="text-lg sm:text-xl mb-4 text-center">
+          Upload Notes
         </h2>
 
+        <div className="flex flex-col gap-4">
 
+          <input
+            type="text"
+            placeholder="Enter your name"
+            value={uploaderName}
+            onChange={(e)=>setUploaderName(e.target.value)}
+            className="w-full p-3 rounded-lg bg-white/20 text-white outline-none placeholder-gray-300"
+          />
 
-        {/* UPLOAD SECTION */}
+          <input
+            type="file"
+            multiple
+            onChange={(e)=>setFiles(e.target.files)}
+            className="w-full text-sm"
+          />
 
-        <div className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl mb-10">
-
-          <h2 className="text-xl mb-4">
+          <button
+            onClick={handleUpload}
+            className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 
+            p-3 rounded-lg font-semibold hover:scale-105 transition"
+          >
             Upload Notes
-          </h2>
-
-          <div className="grid gap-4">
-
-            <input
-              type="text"
-              placeholder="Your Name"
-              value={uploaderName}
-              onChange={(e)=>setUploaderName(e.target.value)}
-              className="p-3 rounded-lg bg-white/20 text-white outline-none"
-            />
-
-            <input
-              type="file"
-              multiple
-              onChange={(e)=>setFiles(e.target.files)}
-            />
-
-            <button
-              onClick={handleUpload}
-              className="bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-lg font-semibold hover:scale-105 transition"
-            >
-              Upload Notes
-            </button>
-
-          </div>
-
-        </div>
-
-
-
-        {/* AVAILABLE NOTES */}
-
-        <h2 className="text-2xl mb-6">
-          Available Notes
-        </h2>
-
-
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-
-          {notes.map(note => {
-
-            const avgRating =
-              note.ratings && note.ratings.length > 0
-                ? (
-                    note.ratings.reduce((sum,r)=>sum+r.value,0) /
-                    note.ratings.length
-                  ).toFixed(1)
-                : "0.0";
-
-
-            return (
-
-              <div
-                key={note._id}
-                className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl"
-              >
-
-                <h3 className="text-xl font-semibold">
-                  {note.subject}
-                </h3>
-
-                <p className="text-gray-300 mt-2">
-                  Uploaded by: {note.uploadedBy}
-                </p>
-
-
-
-                {/* RATING */}
-
-                <p className="text-yellow-400 mt-2 font-semibold">
-                  ⭐ {avgRating} ({note.ratings?.length || 0})
-                </p>
-
-                <div className="flex gap-1 mt-2">
-
-                  {[1,2,3,4,5].map(star => (
-                    <span
-                      key={star}
-                      onClick={()=>rateNote(note._id,star)}
-                      className="cursor-pointer text-yellow-400 text-xl"
-                    >
-                      ⭐
-                    </span>
-                  ))}
-
-                </div>
-
-
-
-                {/* BUTTONS */}
-
-                <div className="flex gap-3 mt-4">
-
-                  <button
-                    onClick={()=>setPreviewUrl(`https://enginote-production.up.railway.app/${note.pdfUrl}`)}
-                    className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
-                  >
-                    Preview
-                  </button>
-
-                  <a
-                    href={`https://enginote-production.up.railway.app/${note.pdfUrl}`}
-                    download
-                    className="flex-1 text-center bg-gradient-to-r from-cyan-400 to-purple-500 py-2 rounded-lg text-black font-semibold"
-                  >
-                    Download
-                  </a>
-
-                </div>
-
-
-
-                {/* DELETE BUTTON */}
-
-                {uploaderName === note.uploadedBy && (
-
-                  <button
-                    onClick={()=>deleteNote(note._id)}
-                    className="mt-3 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-
-                )}
-
-              </div>
-
-            );
-
-          })}
+          </button>
 
         </div>
 
       </div>
 
+      {/* NOTES */}
+      <h2 className="text-xl sm:text-2xl mb-6 text-center">
+        Available Notes
+      </h2>
 
+      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+
+        {notes.map(note => {
+
+          const avgRating =
+            note.ratings?.length > 0
+              ? (
+                  note.ratings.reduce((sum,r)=>sum+r.value,0) /
+                  note.ratings.length
+                ).toFixed(1)
+              : "0.0";
+
+          const userRating = note.ratings?.find(r => r.user === uploaderName)?.value;
+
+          return (
+
+            <div
+              key={note._id}
+              className="bg-white/10 backdrop-blur-lg border border-white/20 p-6 rounded-2xl"
+            >
+
+              <h3 className="text-lg sm:text-xl font-semibold break-words">
+                {note.subject}
+              </h3>
+
+              <p className="text-gray-300 mt-2 text-sm">
+                Uploaded by: {note.uploadedBy}
+              </p>
+
+              {/* ⭐ RATING */}
+              <p className="text-yellow-400 mt-2 font-semibold">
+                ⭐ {avgRating} ({note.ratings?.length || 0})
+              </p>
+
+              <div className="flex gap-1 mt-2">
+
+                {[1,2,3,4,5].map(star => (
+                  <span
+                    key={star}
+                    onClick={()=>rateNote(note._id,star)}
+                    className={`cursor-pointer text-xl ${
+                      star <= userRating ? "text-yellow-400" : "text-gray-500"
+                    }`}
+                  >
+                    ⭐
+                  </span>
+                ))}
+
+              </div>
+
+              {/* BUTTONS */}
+              <div className="flex flex-col sm:flex-row gap-3 mt-4">
+
+                <button
+                  onClick={()=>setPreviewUrl(`https://enginote-production.up.railway.app/${note.pdfUrl}`)}
+                  className="flex-1 bg-blue-500 text-white py-2 rounded-lg"
+                >
+                  Preview
+                </button>
+
+                <a
+                  href={`https://enginote-production.up.railway.app/${note.pdfUrl}`}
+                  download
+                  className="flex-1 text-center bg-gradient-to-r from-cyan-400 to-purple-500 py-2 rounded-lg text-black font-semibold"
+                >
+                  Download
+                </a>
+
+              </div>
+
+              {/* DELETE */}
+              {uploaderName === note.uploadedBy && (
+                <button
+                  onClick={()=>deleteNote(note._id)}
+                  className="mt-3 bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600"
+                >
+                  Delete
+                </button>
+              )}
+
+            </div>
+
+          );
+
+        })}
+
+      </div>
 
       {/* PDF PREVIEW */}
-
       {previewUrl && (
-
         <div className="fixed inset-0 bg-black/70 flex items-center justify-center z-50">
 
-          <div className="bg-white w-[80%] h-[80%] rounded-xl overflow-hidden relative">
+          <div className="bg-white w-[95%] sm:w-[80%] h-[80%] rounded-xl overflow-hidden relative">
 
             <button
               onClick={()=>setPreviewUrl(null)}
@@ -339,11 +311,9 @@ export default function Semester() {
           </div>
 
         </div>
-
       )}
 
     </div>
 
   );
-
 }
