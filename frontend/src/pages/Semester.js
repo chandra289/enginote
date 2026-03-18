@@ -12,14 +12,17 @@ export default function Semester() {
 
   const token = localStorage.getItem("token");
 
-  // ✅ Handle user name (JSON + string safe)
+  // ✅ SAFE USER NAME HANDLING
   const [uploaderName, setUploaderName] = useState(() => {
     const user = localStorage.getItem("user");
+
+    if (!user) return "";
+
     try {
       const parsed = JSON.parse(user);
       return parsed?.name || "";
     } catch {
-      return user || "";
+      return user;
     }
   });
 
@@ -39,7 +42,7 @@ export default function Semester() {
     fetchNotes();
   }, [name, sem, subject, unit]);
 
-  /* 🔥 REAL-TIME RATING (OPTIMISTIC UI) */
+  /* 🔥 REAL-TIME RATING */
   const rateNote = async (noteId, rating) => {
 
     const user = uploaderName;
@@ -71,9 +74,7 @@ export default function Semester() {
       );
     } catch (err) {
       console.log(err);
-
-      // rollback if error
-      fetchNotes();
+      fetchNotes(); // rollback
     }
   };
 
@@ -102,7 +103,6 @@ export default function Semester() {
     formData.append("unit", unit);
 
     try {
-
       await axios.post(
         "https://enginote-production.up.railway.app/api/notes/upload",
         formData,
@@ -118,14 +118,13 @@ export default function Semester() {
       alert("Uploaded successfully");
 
       setFiles([]);
-
       fetchNotes();
 
     } catch (err) {
-  console.log("UPLOAD ERROR:", err.response?.data || err.message);
-  alert("Upload failed");
-}
-};
+      console.log("UPLOAD ERROR:", err.response?.data || err.message);
+      alert("Upload failed");
+    }
+  };
 
   /* DELETE NOTE */
   const deleteNote = async (noteId) => {
@@ -214,7 +213,8 @@ export default function Semester() {
                 ).toFixed(1)
               : "0.0";
 
-          const userRating = note.ratings?.find(r => r.user === uploaderName)?.value;
+          const userRating =
+            note.ratings?.find(r => r.user === uploaderName)?.value || 0;
 
           return (
 
@@ -237,7 +237,6 @@ export default function Semester() {
               </p>
 
               <div className="flex gap-1 mt-2">
-
                 {[1,2,3,4,5].map(star => (
                   <span
                     key={star}
@@ -249,7 +248,6 @@ export default function Semester() {
                     ⭐
                   </span>
                 ))}
-
               </div>
 
               {/* BUTTONS */}
@@ -315,6 +313,5 @@ export default function Semester() {
       )}
 
     </div>
-
   );
 }
