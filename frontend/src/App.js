@@ -17,7 +17,15 @@ import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
 
-  const user = JSON.parse(localStorage.getItem("user"));
+  // ✅ SAFE USER PARSING (handles string + JSON)
+  let user = null;
+
+try {
+  const storedUser = localStorage.getItem("user");
+  user = JSON.parse(storedUser);
+} catch {
+  user = { name: localStorage.getItem("user") };
+}
 
   return (
 
@@ -26,16 +34,11 @@ function App() {
       <Routes>
 
         {/* AUTH ROUTES */}
-
         <Route path="/" element={<Login />} />
-
         <Route path="/login" element={<Login />} />
-
         <Route path="/signup" element={<Signup />} />
 
-
         {/* DASHBOARD */}
-
         <Route
           path="/dashboard"
           element={
@@ -45,9 +48,7 @@ function App() {
           }
         />
 
-
         {/* DEPARTMENT FLOW */}
-
         <Route
           path="/department/:name"
           element={
@@ -84,9 +85,7 @@ function App() {
           }
         />
 
-
         {/* USER PAGES */}
-
         <Route
           path="/profile"
           element={
@@ -114,18 +113,15 @@ function App() {
           }
         />
 
-
         {/* SUPER ADMIN ROUTE */}
-
         <Route
-  path="/admin"
-  element={
-    user?.role === "superadmin"
-      ? <AdminDashboard />
-      : <Navigate to="/dashboard" />
-  }
-/>
-
+          path="/admin"
+          element={
+            user?.role === "superadmin"
+              ? <AdminDashboard />
+              : <Navigate to="/dashboard" />
+          }
+        />
 
       </Routes>
 
