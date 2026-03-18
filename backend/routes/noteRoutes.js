@@ -20,8 +20,8 @@ router.post("/upload", auth, upload.array("files", 10), async (req, res) => {
 
     for (const file of files) {
 
-      let summaryText = "";
-      let flashcardText = "";
+      let summaryText = "AI disabled";
+      let flashcardText = "AI disabled";
 
       try {
 
