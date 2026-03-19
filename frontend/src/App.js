@@ -115,15 +115,15 @@ try {
 
         {/* SUPER ADMIN ROUTE */}
         <Route
-          path="/admin"
-          element={
-            user?.role === "superadmin"
-              ? <AdminDashboard />
-              : <Navigate to="/dashboard" />
-          }
-        />
-
-      </Routes>
+  path="/admin"
+  element={
+    <ProtectedRoute>
+      <AdminRoute>
+        <AdminDashboard />
+      </AdminRoute>
+    </ProtectedRoute>
+  }
+/></Routes>
 
     </BrowserRouter>
 

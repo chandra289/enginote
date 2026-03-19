@@ -7,204 +7,88 @@ export default function AdminDashboard() {
   const [totalNotes, setTotalNotes] = useState(0);
   const [notes, setNotes] = useState([]);
 
-  useEffect(() => {
+  const token = localStorage.getItem("token");
 
+  const config = {
+    headers: {
+      Authorization: `Bearer ${token}`   // ✅ IMPORTANT
+    }
+  };
+
+  useEffect(() => {
     fetchUsers();
     fetchTotalNotes();
     fetchNotes();
-
   }, []);
 
 
-  /* TOTAL USERS */
-
   const fetchUsers = async () => {
-
     try {
-
       const res = await axios.get(
-        "http://enginote-production.up.railway.app/api/admin/users/count"
+        "https://enginote-production.up.railway.app/api/admin/users/count",
+        config
       );
-
       setUsers(res.data.count);
-
     } catch (err) {
-
-      console.error("Error fetching users");
-
+      console.error("Error fetching users", err.response);
     }
-
   };
 
-
-  /* TOTAL NOTES */
 
   const fetchTotalNotes = async () => {
-
     try {
-
       const res = await axios.get(
-        "http://enginote-production.up.railway.app/api/admin/notes/count"
+        "https://enginote-production.up.railway.app/api/admin/notes/count",
+        config
       );
-
       setTotalNotes(res.data.count);
-
     } catch (err) {
-
-      console.error("Error fetching notes");
-
+      console.error("Error fetching notes", err.response);
     }
-
   };
 
-
-  /* ALL NOTES */
 
   const fetchNotes = async () => {
-
     try {
-
       const res = await axios.get(
-        "http://enginote-production.up.railway.app/api/admin/notes"
+        "https://enginote-production.up.railway.app/api/admin/notes",
+        config
       );
-
       setNotes(res.data);
-
     } catch (err) {
-
-      console.error("Error fetching notes list");
-
+      console.error("Error fetching notes", err.response);
     }
-
   };
 
-
-  /* DELETE NOTE */
 
   const deleteNote = async (id) => {
-
     try {
-
       await axios.delete(
-        `https://enginote-production.up.railway.app/api/admin/notes/${id}`
+        `https://enginote-production.up.railway.app/api/admin/notes/${id}`,
+        config
       );
-
       fetchNotes();
       fetchTotalNotes();
-
     } catch (err) {
-
-      console.error("Delete failed");
-
+      console.error("Delete failed", err.response);
     }
-
   };
 
-
   return (
+    <div className="text-white p-10">
+      <h1 className="text-3xl mb-6">Admin Dashboard</h1>
 
-    <div className="min-h-screen px-4 py-10 md:p-10 bg-gradient-to-br from-indigo-900 via-purple-900 to-indigo-800 text-white">
+      <p>Total Users: {users}</p>
+      <p>Total Notes: {totalNotes}</p>
 
-      <h1 className="text-4xl font-bold mb-10">
-        Admin Dashboard
-      </h1>
-
-
-      {/* ANALYTICS CARDS */}
-
-      <div className="grid md:grid-cols-3 gap-8 mb-10">
-
-        {/* TOTAL USERS */}
-
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl">
-
-          <h2 className="text-xl font-bold">
-            👥 Total Users
-          </h2>
-
-          <p className="text-3xl mt-2">
-            {users}
-          </p>
-
+      {notes.map(note => (
+        <div key={note._id}>
+          <h3>{note.subject}</h3>
+          <button onClick={() => deleteNote(note._id)}>
+            Delete
+          </button>
         </div>
-
-
-        {/* TOTAL NOTES */}
-
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl">
-
-          <h2 className="text-xl font-bold">
-            📄 Total Notes
-          </h2>
-
-          <p className="text-3xl mt-2">
-            {totalNotes}
-          </p>
-
-        </div>
-
-
-        {/* PLATFORM STATUS */}
-
-        <div className="bg-white/10 backdrop-blur-lg p-6 rounded-xl">
-
-          <h2 className="text-xl font-bold">
-            ⭐ Platform Status
-          </h2>
-
-          <p className="text-lg mt-2">
-            EngiNote Running
-          </p>
-
-        </div>
-
-      </div>
-
-
-      {/* NOTES MANAGEMENT */}
-
-      <h2 className="text-2xl mb-6">
-        Uploaded Notes
-      </h2>
-
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-
-        {notes.map((note) => (
-
-          <div
-            key={note._id}
-            className="bg-white/10 backdrop-blur-lg p-6 rounded-xl"
-          >
-
-            <h3 className="font-bold text-lg">
-              {note.subject}
-            </h3>
-
-            <p className="text-sm text-gray-300">
-              {note.department}
-            </p>
-
-            <p className="text-sm text-gray-400">
-              Unit {note.unit}
-            </p>
-
-
-            <button
-              onClick={() => deleteNote(note._id)}
-              className="mt-4 bg-red-500 hover:bg-red-600 px-4 py-2 rounded"
-            >
-              Delete Note
-            </button>
-
-          </div>
-
-        ))}
-
-      </div>
-
+      ))}
     </div>
-
   );
-
 }

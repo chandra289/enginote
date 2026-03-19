@@ -1,8 +1,8 @@
-module.exports = function(req,res,next){
+module.exports = function (req, res, next) {
 
-  if(req.user.role !== "superadmin"){
-    return res.status(403).json({message:"Access denied"});
+  if (!req.user || req.user.role !== "superadmin") {
+    return res.status(403).json({ message: "Access denied: Admin only" });
   }
 
   next();
-}
+};
