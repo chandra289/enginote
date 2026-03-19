@@ -10,33 +10,54 @@ export default function Login() {
     password: ""
   });
 
+  const [loading, setLoading] = useState(false);
+
   const navigate = useNavigate();
 
   const handleLogin = async () => {
 
+    // ✅ Validation
+    if (!form.email || !form.password) {
+      alert("Please enter email and password");
+      return;
+    }
+
     try {
+
+      setLoading(true);
+
+      console.log("Sending Data:", form); // 🔍 DEBUG
 
       const res = await axios.post(
         "https://enginote-production.up.railway.app/api/auth/login",
         form
       );
 
-      // save token
+      console.log("Response:", res.data); // 🔍 DEBUG
+
+      // ✅ Save token
       localStorage.setItem("token", res.data.token);
 
-      // save full user object (important for role)
+      // ✅ Save user (with role)
       localStorage.setItem("user", JSON.stringify(res.data.user));
 
       alert("Login Successful");
 
+      // ✅ Redirect
       navigate("/dashboard");
 
     } catch (err) {
 
-      alert(err.response?.data?.message || "Invalid Email or Password");
+      console.log("Login Error:", err.response); // 🔍 DEBUG
 
+      alert(
+        err.response?.data?.message ||
+        "Login failed. Check email/password."
+      );
+
+    } finally {
+      setLoading(false);
     }
-
   };
 
   return (
@@ -73,7 +94,9 @@ export default function Login() {
           type="email"
           placeholder="Email"
           value={form.email}
-          onChange={(e)=>setForm({...form,email:e.target.value})}
+          onChange={(e) =>
+            setForm({ ...form, email: e.target.value })
+          }
           className="w-full mb-4 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none"
         />
 
@@ -82,27 +105,27 @@ export default function Login() {
           type="password"
           placeholder="Password"
           value={form.password}
-          onChange={(e)=>setForm({...form,password:e.target.value})}
+          onChange={(e) =>
+            setForm({ ...form, password: e.target.value })
+          }
           className="w-full mb-6 p-3 rounded-lg bg-white/20 text-white placeholder-gray-300 outline-none"
         />
 
         {/* Login Button */}
         <button
           onClick={handleLogin}
-          className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-lg font-semibold hover:scale-105 transition"
+          disabled={loading}
+          className="w-full bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-lg font-semibold hover:scale-105 transition disabled:opacity-50"
         >
-          Login
+          {loading ? "Logging in..." : "Login"}
         </button>
 
         {/* Signup */}
         <p className="text-center text-gray-300 mt-4">
-
           Don't have an account?{" "}
-
           <Link to="/signup" className="text-cyan-300">
             Signup
           </Link>
-
         </p>
 
       </div>
