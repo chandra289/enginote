@@ -1,14 +1,13 @@
 const express = require("express");
 const router = express.Router();
 
-const auth = require("../middleware/auth");          // ✅ ADD
+const auth = require("../middleware/auth");          // ✅ ADD THIS
 const authAdmin = require("../middleware/authAdmin");
 
 const User = require("../models/User");
 const Note = require("../models/Note");
 
 
-/* TOTAL USERS */
 router.get("/users/count", auth, authAdmin, async (req, res) => {
   try {
     const count = await User.countDocuments();
@@ -19,7 +18,6 @@ router.get("/users/count", auth, authAdmin, async (req, res) => {
 });
 
 
-/* TOTAL NOTES */
 router.get("/notes/count", auth, authAdmin, async (req, res) => {
   try {
     const count = await Note.countDocuments();
@@ -30,7 +28,6 @@ router.get("/notes/count", auth, authAdmin, async (req, res) => {
 });
 
 
-/* GET ALL NOTES */
 router.get("/notes", auth, authAdmin, async (req, res) => {
   try {
     const notes = await Note.find().sort({ createdAt: -1 });
@@ -41,7 +38,6 @@ router.get("/notes", auth, authAdmin, async (req, res) => {
 });
 
 
-/* DELETE NOTE */
 router.delete("/notes/:id", auth, authAdmin, async (req, res) => {
   try {
     await Note.findByIdAndDelete(req.params.id);
