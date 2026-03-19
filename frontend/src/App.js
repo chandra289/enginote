@@ -7,6 +7,7 @@ import Department from "./pages/Department";
 import Semester from "./pages/Semester";
 import Subjects from "./pages/Subjects";
 import Units from "./pages/Units";
+import AdminRoute from "./components/AdminRoute";
 
 import Profile from "./pages/Profile";
 import MyUploads from "./pages/MyUploads";
