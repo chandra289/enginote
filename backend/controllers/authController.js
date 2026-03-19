@@ -1,59 +1,20 @@
-const User = require("../models/User");
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-
-
-// SIGNUP
-exports.signup = async (req, res) => {
+exports.login = async (req, res) => {
   try {
-    console.log("Signup Body:", req.body); // 👈 ADD THIS
 
-    const { name, email, password, department } = req.body;
+    const { email, password } = req.body;
 
-    if (!name || !email || !password) {
+    console.log("Request body:", req.body);
+
+    // ✅ check empty fields
+    if (!email || !password) {
       return res.status(400).json({
         message: "All fields are required"
       });
     }
 
-    const existingUser = await User.findOne({ email });
-
-    if (existingUser) {
-      return res.status(400).json({
-        message: "User already exists"
-      });
-    }
-
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const user = new User({
-      name,
-      email,
-      password: hashedPassword,
-      department // 👈 ADD THIS
-    });
-
-    await user.save();
-
-    res.json({
-      message: "Signup successful"
-    });
-
-  } catch (err) {
-    console.log("Signup Error:", err); // 👈 ADD THIS
-    res.status(500).json({ message: err.message }); // 👈 CHANGE THIS
-  }
-};
-
-
-// LOGIN
-exports.login = async (req, res) => {
-
-  try {
-
-    const { email, password } = req.body;
-
     const user = await User.findOne({ email });
+
+    console.log("User from DB:", user);
 
     if (!user) {
       return res.status(400).json({
@@ -61,10 +22,7 @@ exports.login = async (req, res) => {
       });
     }
 
-    const isMatch = await bcrypt.compare(
-      password,
-      user.password
-    );
+    const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
       return res.status(400).json({
@@ -72,19 +30,25 @@ exports.login = async (req, res) => {
       });
     }
 
-    // create JWT token
-    const token = jwt.sign(
+    console.log("User role:", user.role);
 
+    // 🔥 SUPERADMIN CHECK
+    if (user.role !== "superadmin") {
+      return res.status(403).json({
+        message: "Access denied: Superadmin only"
+      });
+    }
+
+    // ✅ create JWT token (include role)
+    const token = jwt.sign(
       {
         id: user._id,
         name: user.name,
-        email: user.email
+        email: user.email,
+        role: user.role   // 👈 IMPORTANT
       },
-
       process.env.JWT_SECRET,
-
       { expiresIn: "7d" }
-
     );
 
     res.json({
@@ -93,15 +57,12 @@ exports.login = async (req, res) => {
         id: user._id,
         name: user.name,
         email: user.email,
-        role:user.role
+        role: user.role
       }
     });
 
   } catch (err) {
-
-    console.log(err);
+    console.log("Login Error:", err);
     res.status(500).json({ message: "Login failed" });
-
   }
-
 };
